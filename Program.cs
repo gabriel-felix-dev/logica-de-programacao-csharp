@@ -4,119 +4,229 @@ class Program
 {
     static void Main(string[] args)
     {
-        Console.Clear();
+        Console.WriteLine("\n=== Exercício 01 ===\n");
 
-        // Devido aos Arrays serem do tipo de referência (Reference Type), devemos iniciar com o "new". 
-        // => Arrays, listas, armazenam a referência de uma informação e não a informação em si.
+        List<int> listaDeNumerosDecrescentes = new List<int>();
 
-        // var meuArraySemDeclaracao1 = new int[5]; // Foi criado um Array do tipo inteiro com 5 posições e atribuido na variável meuArray.
-
-        // var meuArraySemDeclaracao2 = new int[5] { 1, 23, 63, 45, 55 }; // Foi criado um Array do tipo inteiro com 5 posições, cada posição com o seu valor e atribuido na variável meuArray. O Array sendo criado dessa forma com a declaração de "var" se torna necessário iniciar com o "new".
-
-        // meuArraySemDeclaracao1[0] = 12; // => Insere o valor 12 na posição 0 do Array.
-
-        // int[] meuArraySemDeclaracao3 = { }; // => Outra forma de criar um Array. Como o Array foi iniciado apartir do tipo, não precisamos iniciar o Array com o "new".
-
-        // int[] meuArrayDeclarado = { 1, 23, 63, 45, 55 }; // => Outra forma de criar um Array instanciado com um valores definidos.
-
-        // Console.WriteLine(meuArrayDeclarado[0]); // => Imprime a posição 0, a primeira posição, do Array.
-        // Console.WriteLine(meuArrayDeclarado[1]);
-        // Console.WriteLine(meuArrayDeclarado[2]);
-        // Console.WriteLine(meuArrayDeclarado[3]);
-        // Console.WriteLine(meuArrayDeclarado[4]);
-
-
-        // //----------------------------------------------------------
-        // var meuArrayDeclarado2 = new Teste[2]; // Cria um Array com o tipo sendo uma Struct chamada Teste usando o "new" e que tem tamanho 2;
-        // meuArrayDeclarado2[0] = new Teste(); // Define a posição 0 com uma nova struct
-        // meuArrayDeclarado2[1] = new Teste(); // Define a posição 1 com uma nova struct
-
-        // Console.WriteLine(meuArrayDeclarado2[0].Hello("Hello")); // Inicia a struct da posição 0 e ativa o método Hello colocando um dado no parâmetro;
-        // Console.WriteLine(meuArrayDeclarado2[1].Hello("To Heaven"));
-
-
-        // //----------------------------------------------------------
-        // Teste[] meuArrayDeclarado3 = { new Teste(), new Teste() }; // Cria um Array sendo do tipo struct e que já está recebendo as informações. 
-
-        // Console.WriteLine(meuArrayDeclarado3[0].Hello("Say Hello")); // Imprime a informação da posição 0 do Array e referencia o método Hello informando o dado para o parametro.
-        // Console.WriteLine(meuArrayDeclarado3[1].Hello("To Heaven"));
-
-        var meuArray = new int[5] { 1, 2, 3, 4, 5 };
-        meuArray[0] = 12;
-
-        // O for começa com a posição inicial do Array (0);
-        // Verifica se a variável "item" é menor que o tamnho total do Array (meuArray.Length);
-        // Se item continuar sendo menor que o tamanho total do Array, incremente o item (item++).
-        // for (var item = 0; item < meuArray.Length; item++)
-        // {
-        //     Console.WriteLine(meuArray[item]); // Imprime a posição do array conforme o número que estiver na "var item" do for.
-        // }
-
-        // Console.WriteLine(" ");
-
-        // var meuArray2 = new int[10] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-
-        // for (var item = 0; item < meuArray2.Length; item++)
-        // {
-        //     Console.WriteLine(meuArray2[item]);
-        // }
-
-        foreach (var item in meuArray) // for(para) each(cada) => para cada "item" no (in) "meuArray" = imprima na tela a var item.
+        Console.WriteLine("Números crescentes:");
+        for (int numerosCrescentes = 1; numerosCrescentes <= 10; numerosCrescentes++)
         {
-            Console.WriteLine(item); // Imprime na tela a var item com os valores das posições do "meuArray"
+            Console.WriteLine(numerosCrescentes);
+            listaDeNumerosDecrescentes.Add(numerosCrescentes);
         }
 
-        var funcionario = new Funcionarios[5]; // Cria um Array de 5 posições com base em uma struct
-        funcionario[0] = new Funcionarios() { Id = 1515, Name = "João" }; // Insere na posição 0 a informação de uma nova struct Funcionarios com dados nas propriedades Id e Name. 
+        listaDeNumerosDecrescentes.Reverse();
 
-        foreach (var funcionarios in funcionario) // Cria o foreach e para cada var funcionarios em funcionario ==>
+        Console.WriteLine("\nNúmeros decrescentes:");
+
+        foreach (var itensNaListaDecrescente in listaDeNumerosDecrescentes)
+            Console.WriteLine(itensNaListaDecrescente);
+
+        Console.WriteLine("\n=== Exercício 02 ===\n");
+
+        while (true)
         {
-            Console.WriteLine(funcionarios.Id); //==> Deverá imprimir o Id e o Name.
-            Console.WriteLine(funcionarios.Name);
-        }
-    }
-    /*
-        enum ETipoDeProduto{
-            Produto = 1,
-            Servico = 2
-        }
+            Console.WriteLine($"Informe um número para a tabuada:");
+            string numeroDigitado = Console.ReadLine();
 
-        struct Produto{
+            decimal numeroTabuada, multiplicacaoTabuada;
 
-            public int Id;
-            public string Titulo;
-            public float Preco;
-            public ETipoDeProduto Tipo;
-
-            public Produto(int id, string titulo, float preco, ETipoDeProduto tipo){
-
-                Id = id;
-                Titulo = titulo;
-                Preco = preco;
-                Tipo = tipo;
-
-            }
-
-            public float PrecoEmDolar(float dolar){
-                return Preco * dolar;
-            }
-        }
-
-        struct Teste
-        {
-            public int Id;
-            public string Hello(string texto)
+            if (decimal.TryParse(numeroDigitado, out numeroTabuada))
             {
-                return texto;
+                Console.WriteLine($"\nTabuada do número: {numeroTabuada}");
+
+                for (decimal numeroParaMultiplicar = 1; numeroParaMultiplicar <= 10; numeroParaMultiplicar++)
+                {
+                    multiplicacaoTabuada = numeroTabuada * numeroParaMultiplicar;
+                    Console.WriteLine($"{numeroTabuada} X {numeroParaMultiplicar} = {multiplicacaoTabuada}");
+                }
+                break;
+            }
+            else
+                Console.WriteLine($"Valor digitado inválido\n");
+        }
+
+        Console.WriteLine("\n=== Exercício 03 ===\n");
+
+        while (true)
+        {
+            Console.WriteLine("Digite a temperatura em °C para ser convertida: ");
+            string numeroInformadoParaConversao = Console.ReadLine();
+
+            decimal temperaturaEmCelcius, conversaoEmFahrenheit;
+
+            if (decimal.TryParse(numeroInformadoParaConversao, out temperaturaEmCelcius))
+            {
+                conversaoEmFahrenheit = (temperaturaEmCelcius * 9 / 5) + 32;
+
+                Console.WriteLine($"\nTemperatura em °C informada: {temperaturaEmCelcius}°");
+                Console.WriteLine($"Temperatura em Fahrenheit: {conversaoEmFahrenheit}°");
+                break;
+            }
+            else
+                Console.WriteLine("Valor informado inválido");
+        }
+
+        Console.WriteLine("\n=== Exercício 04 ===\n");
+
+        int numerosDigitados;
+        int somaDeNumeros = 0;
+
+        while (true)
+        {
+            Console.WriteLine("Digite números positivos para soma: ");
+            numerosDigitados = int.Parse(Console.ReadLine());
+
+            if (numerosDigitados < 0)
+                break;
+
+            somaDeNumeros += numerosDigitados;
+        }
+
+        Console.WriteLine($"Soma total dos números: {somaDeNumeros}");
+
+        Console.WriteLine("\n=== Exercício 05 ===\n");
+
+        Console.WriteLine("Digite um número: ");
+        int numeroDigitado3 = int.Parse(Console.ReadLine());
+
+        List<int> listaDeNumerosPrimos = new List<int>();
+
+        for (int contadorNumeroPrimo = 2; contadorNumeroPrimo <= numeroDigitado3; contadorNumeroPrimo++)
+        {
+            bool numeroPrimo = true;
+
+            for (int multiplicadorPrimo = 2; multiplicadorPrimo * multiplicadorPrimo <= contadorNumeroPrimo; multiplicadorPrimo++)
+            {
+                if (contadorNumeroPrimo % multiplicadorPrimo == 0)
+                {
+                    numeroPrimo = false;
+                    continue;
+                }
             }
 
+            if (numeroPrimo)
+            {
+                listaDeNumerosPrimos.Add(contadorNumeroPrimo);
+                continue;
+            }
         }
-        */
 
-    public struct Funcionarios
-    {
-        public int Id;
-        public string Name;
+        Console.WriteLine($"Números primos existentes até o número {numeroDigitado3}: ");
+        foreach (var itemListaNumerosPrimos in listaDeNumerosPrimos)
+        {
+            Console.Write($"{itemListaNumerosPrimos} ");
+        }
+
+        Console.WriteLine("\n=== Exercício 06 ===\n");
+
+        Console.WriteLine("Digite uma palavra ou um frase para contarmos quantas vogais há: ");
+        string informacaoDigitada1 = Console.ReadLine();
+
+        int contadorDeCaracteres = 0;
+
+        char[] listaDeCaracteres1 = informacaoDigitada1.ToCharArray();
+
+        for (int percorreLista = 0; percorreLista < listaDeCaracteres1.Length; percorreLista++)
+        {
+            switch (listaDeCaracteres1[percorreLista])
+            {
+                case 'a':
+                case 'e':
+                case 'i':
+                case 'o':
+                case 'u':
+                    contadorDeCaracteres++;
+                    break;
+                default:
+                    continue;
+            }
+        }
+
+        Console.WriteLine($"\nSeu texto digitado: {informacaoDigitada1}");
+        Console.WriteLine($"Quantidade de vogais presentes: {contadorDeCaracteres}");
+
+
+        Console.WriteLine("\n=== Exercício 07 ===\n");
+
+        Console.WriteLine("Digite uma palavra ou uma frase: ");
+        string informacaoDigitada = Console.ReadLine();
+
+        //string textoSemEspaco = informacaoDigitada.Replace(" ", "");
+
+        Console.WriteLine($"\nSeu texto: {informacaoDigitada}");
+
+        char[] listaDeCaracteres = informacaoDigitada.ToArray();
+
+        Array.Reverse(listaDeCaracteres);
+
+        Console.Write("\nSeu texto invertido: ");
+        foreach (var itensListaDeCaracteres in listaDeCaracteres)
+        {
+            Console.Write(itensListaDeCaracteres);
+        }
+
+        Console.WriteLine("\n\n=== Exercício 08 ===\n");
+
+        Console.WriteLine("Digite um número: ");
+        decimal numeroDigitado2 = decimal.Parse(Console.ReadLine());
+
+        decimal fatoracaoDeNumero = 1;
+
+        for (decimal numeroParaFatorar = numeroDigitado2; numeroParaFatorar >= 1; numeroParaFatorar--)
+            fatoracaoDeNumero *= numeroParaFatorar;
+
+        Console.WriteLine($"\nO resultado da fatoração do número {numeroDigitado2}! é: {fatoracaoDeNumero}");
+
+        Console.WriteLine("\n=== Exercício 09 ===\n");
+
+        int[] listaDeNumerosInteiros = [10, -3, 98, 7, 42];
+
+        int maiorValor = int.MinValue;
+        int menorValor = int.MaxValue;
+
+        Console.Write("Lista de números interios: ");
+        foreach (var itemDaLista in listaDeNumerosInteiros)
+        {
+            Console.Write($"{itemDaLista} ");
+
+            if (itemDaLista > maiorValor)
+                maiorValor = itemDaLista;
+
+            if (itemDaLista < menorValor)
+                menorValor = itemDaLista;
+        }
+
+        Console.WriteLine($"\nMaior número da lista: {maiorValor}");
+        Console.WriteLine($"Menor número da lista: {menorValor}");
+
+        Console.WriteLine("\n=== Exercício 10 ===\n");
+
+        int[,] matrizTransposta = {
+            {1,2,3},
+            {4,5,6},
+            {7,8,9}
+        };
+
+        Console.WriteLine("Matriz original: ");
+
+        for (int linhaMatriz = 0; linhaMatriz < matrizTransposta.GetLength(0); linhaMatriz++)
+        {
+            for (int colunaMatriz = 0; colunaMatriz < matrizTransposta.GetLength(1); colunaMatriz++)
+            {
+                Console.Write($"{matrizTransposta[linhaMatriz, colunaMatriz]} ");
+            }
+            Console.WriteLine();
+        }
+        Console.WriteLine("\nMatriz transposta: ");
+
+        for (int linhaMatriz = 0; linhaMatriz < matrizTransposta.GetLength(0); linhaMatriz++)
+        {
+            for (int colunaMatriz = 0; colunaMatriz < matrizTransposta.GetLength(1); colunaMatriz++)
+            {
+                Console.Write($"{matrizTransposta[colunaMatriz, linhaMatriz]} ");
+            }
+            Console.WriteLine();
+        }
     }
-
 }
