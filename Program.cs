@@ -141,12 +141,32 @@ class Program
 
         List<decimal> listaDeNotas = new List<decimal>();
 
+        string nomeAluno;
         decimal assiduidadeMinima = 75.0m;
-        decimal notaAluno = 0;
+        decimal assiduidadeAluno;
+        decimal notaAluno;
+        EnumSituacaoAluno situacaoAluno;
 
-        int pesoDeNota1 = 1;
-        int pesoDeNota2 = 5;
-        int pesoDeNota3 = 4;
+        decimal totalDosPesos = 0.0m;
+        decimal pesoDeNota1 = 1.0m;
+        totalDosPesos += pesoDeNota1;
+        decimal pesoDeNota2 = 5.0m;
+        totalDosPesos += pesoDeNota2;
+        decimal pesoDeNota3 = 4.0m;
+        totalDosPesos += pesoDeNota3;
+
+        Console.WriteLine($"\n==== Boletim Final ====\n");
+
+        while (true)
+        {
+            Console.WriteLine("Digite o nome do aluno: ");
+            nomeAluno = Console.ReadLine();
+
+            if (!string.IsNullOrWhiteSpace(nomeAluno))
+                break;
+            else
+                Console.WriteLine("Nome inválido, digite novamente.\n");
+        }
 
         while (listaDeNotas.Count < 3)
         {
@@ -158,14 +178,334 @@ class Program
                 listaDeNotas.Add(notaAluno);
         }
 
-        List<decimal> listaDeNotasComPesos = new List<decimal>(listaDeNotas[0] * pesoDeNota1, listaDeNotas[1] * pesoDeNota2);
+        Console.WriteLine($"\nDigite a frenquência do aluno: ");
+
+        while (!decimal.TryParse(Console.ReadLine(), out assiduidadeAluno) || assiduidadeAluno < 0 || assiduidadeAluno > 100)
+            Console.WriteLine("Valores digitados inválidos, a assiduidade do aluno deve ser entre 0 e 100. Digite novamente\n");
+
+        List<decimal> listaDeNotasComPesos = new List<decimal> { listaDeNotas[0] * pesoDeNota1, listaDeNotas[1] * pesoDeNota2, listaDeNotas[2] * pesoDeNota3 };
+
+        decimal mediaFinal = listaDeNotasComPesos.Sum() / totalDosPesos;
+
+        if (assiduidadeMinima <= assiduidadeAluno)
+        {
+            if (mediaFinal < 5)
+                situacaoAluno = EnumSituacaoAluno.REPROVADO;
+
+            else if (mediaFinal < 7)
+                situacaoAluno = EnumSituacaoAluno.RECUPERAÇÃO;
+
+            else
+                situacaoAluno = EnumSituacaoAluno.APROVADO;
+        }
+        else
+            situacaoAluno = EnumSituacaoAluno.REPROVADOPORFALTA;
+
+        Console.WriteLine($"\nNome do aluno: {nomeAluno}");
+        Console.WriteLine($"Notas: {listaDeNotas[0]}, {listaDeNotas[1]}, {listaDeNotas[2]}");
+        Console.WriteLine($"Média: {mediaFinal:F2}");
+        Console.WriteLine($"Frequência: {assiduidadeAluno}");
+        if (situacaoAluno.Equals(EnumSituacaoAluno.REPROVADOPORFALTA))
+            Console.WriteLine($"\nSituação: Reprovado por falta.");
+
+        else
+            Console.WriteLine($"\nSituação: {situacaoAluno}");
     }
-    static void Prova1Questao3() { }
-    static void Prova1Questao4() { }
-    static void Prova1Questao5() { }
+    static void Prova1Questao3()
+    {
+        Console.Clear();
+
+        EnumDesempenhoEstagiarios desempenhoEstagiarios;
+        int quantidadeTurmaEstagiarios;
+        List<decimal> listaDeMedias = [];
+        decimal maiorMedia = decimal.MinValue;
+        decimal menorMedia = decimal.MaxValue;
+        int contadorDeAprovados = 0;
+        int contadorDeReprovados = 0;
+
+        Console.WriteLine($"A turma é composta por quantos estágiarios?");
+
+        while (!int.TryParse(Console.ReadLine(), out quantidadeTurmaEstagiarios))
+            Console.WriteLine("O valor informado é inválido, digite novamente\n");
+
+        while (listaDeMedias.Count < quantidadeTurmaEstagiarios)
+        {
+            Console.WriteLine($"\nDigite a média do {listaDeMedias.Count + 1}° estágiario: ");
+
+            if (!decimal.TryParse(Console.ReadLine(), out decimal mediaEstagiario) || mediaEstagiario < 0 || mediaEstagiario > 10)
+                Console.WriteLine("O valor digitado para a média é inválido, digite novamente\n");
+
+            else
+            {
+                listaDeMedias.Add(mediaEstagiario);
+
+                if (mediaEstagiario > maiorMedia)
+                    maiorMedia = mediaEstagiario;
+
+                if (mediaEstagiario < menorMedia)
+                    menorMedia = mediaEstagiario;
+
+                if (mediaEstagiario >= 7)
+                    contadorDeAprovados++;
+
+                if (contadorDeReprovados < 5)
+                    contadorDeReprovados++;
+            }
+        }
+
+        decimal mediaTurma = listaDeMedias.Sum() / listaDeMedias.Count;
+
+        switch (mediaTurma)
+        {
+            case < 5.0m:
+                desempenhoEstagiarios = EnumDesempenhoEstagiarios.FRACA;
+                break;
+            case < 6.0m:
+                desempenhoEstagiarios = EnumDesempenhoEstagiarios.REGULAR;
+                break;
+            case < 8.0m:
+                desempenhoEstagiarios = EnumDesempenhoEstagiarios.BOA;
+                break;
+            default:
+                desempenhoEstagiarios = EnumDesempenhoEstagiarios.EXCELENTE;
+                break;
+        }
+
+        Console.WriteLine("\n=== Média da Turma de Estagiários ===\n");
+
+        Console.WriteLine($"Média da turma: {mediaTurma:F2}");
+        Console.WriteLine($"Maior média: {maiorMedia}");
+        Console.WriteLine($"Menor média: {menorMedia}");
+        Console.WriteLine($"Quantidade de aprovados: {contadorDeAprovados}");
+        Console.WriteLine($"Quantidade de reprovados: {contadorDeReprovados}");
+        Console.WriteLine($"Desempenho: {desempenhoEstagiarios}");
+    }
+    static void Prova1Questao4()
+    {
+        List<string> listaDeProdutos = ["Mouse", "Teclado", "Monitor", "Cabo HDMI", "Cadeira"];
+        List<int> listaDeEstoques = [10, 6, 4, 18, 5];
+
+        int contadorDeEstoque = 0;
+
+        List<string> listaDeProdutosComEstoqueBaixo = [];
+
+        Console.WriteLine("=== Estoque Inicial ===\n");
+
+        for (int percorreLista = 0; percorreLista < listaDeProdutos.Count; percorreLista++)
+            Console.WriteLine($"Produto: {listaDeProdutos[percorreLista]} - {listaDeEstoques[percorreLista]} unidades");
+
+        Console.WriteLine("\n=== Operações ===\n");
+
+        listaDeProdutos.Add("SSD");
+        listaDeEstoques.Add(7);
+
+        listaDeEstoques[1] = 12;
+
+        Console.WriteLine($"Produto adicionado no estoque: {listaDeProdutos[5]} - {listaDeEstoques[5]} unidades");
+
+        bool contemProduto = listaDeProdutos.Contains("Webcam");
+
+        Console.WriteLine($"O produto \"Webcam\" existe no estoque? {(contemProduto ? "Sim" : "Não")}");
+
+        for (int percorreLista = 0; percorreLista < listaDeProdutos.Count; percorreLista++)
+        {
+            if (listaDeEstoques[percorreLista] < 8)
+            {
+                contadorDeEstoque++;
+
+                listaDeProdutosComEstoqueBaixo.Add(listaDeProdutos[percorreLista]);
+            }
+        }
+
+        Console.WriteLine($"Quantidade de produtos com estoque abaixo de 8: {contadorDeEstoque}");
+
+        Console.WriteLine($"Lista de produtos com estoque abaixo de 8: ");
+        foreach (var itensNaLista in listaDeProdutosComEstoqueBaixo)
+            Console.WriteLine(itensNaLista);
+
+        listaDeProdutos.Remove("Monitor");
+        listaDeEstoques.Remove(4);
+
+        Console.WriteLine($"Produto removido: Monitor");
+
+        int totalDeProdutosEmEstoque = listaDeEstoques.Sum();
+
+        Console.WriteLine($"\n=== Estoque Final ===\n");
+
+        for (int percorreLista = 0; percorreLista < listaDeProdutos.Count; percorreLista++)
+            Console.WriteLine($"Produto: {listaDeProdutos[percorreLista]} - {listaDeEstoques[percorreLista]} unidades");
+
+        Console.WriteLine($"\nTotal de produtos: {totalDeProdutosEmEstoque}");
+    }
+    static void Prova1Questao5()
+    {
+        Console.Clear();
+
+        string nomeCliente, formaDePagamentoDigitado, tipoDePagamento;
+        decimal valorCompra;
+        bool cupomParaDesconto = false;
+        decimal percentualDescontoComCupom = 0.0m;
+        decimal valorDeDescontoComCupom = 0.0m;
+        decimal descontoAdicional = 0.0m;
+        decimal valorDeDescontoAdicional = 0.0m;
+        decimal taxaDeAcrescimo = 0.0m;
+        decimal valorDeTaxaDeAcrescimo = 0.0m;
+        int quantidadeDeParcelas = 0;
+        decimal valorDeParcelas = 0.0m;
+
+        decimal valorFinal = 0.0m;
+
+        while (true)
+        {
+            Console.WriteLine("Digite o nome do cliente: ");
+            nomeCliente = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(nomeCliente))
+                Console.WriteLine("Nome inválido, digite novamnete\n");
+
+            else
+                break;
+        }
+
+        Console.WriteLine("\nDigite o valor da compra: ");
+
+        while (!decimal.TryParse(Console.ReadLine(), out valorCompra))
+            Console.WriteLine("O valor da compra é inválido, digite novamente");
+
+        while (true)
+        {
+            Console.WriteLine("\nDigite a forma de pagamento: ");
+            formaDePagamentoDigitado = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(formaDePagamentoDigitado))
+                Console.WriteLine("A forma de pagamento é inválida, digite novamnete\n");
+
+            else
+                break;
+        }
+
+        if (formaDePagamentoDigitado.ToLower().Equals("credito") || formaDePagamentoDigitado.ToLower().Equals("crédito"))
+        {
+            Console.WriteLine("\nDigite a quantidade de parcelas: ");
+
+            while (!int.TryParse(Console.ReadLine(), out quantidadeDeParcelas) || quantidadeDeParcelas < 0)
+                Console.WriteLine("A quantidade de parcelas é inválida, digite novamente");
+        }
+
+        while (true)
+        {
+            Console.WriteLine("\nO cliente tem cupom? ");
+            string cupomDigitado = Console.ReadLine();
+
+            if (cupomDigitado.ToLower().Equals("sim"))
+            {
+                percentualDescontoComCupom = 0.1m;
+                cupomParaDesconto = true;
+                break;
+            }
+            else if (cupomDigitado.ToLower().Equals("não") || cupomDigitado.ToLower().Equals("nao"))
+                break;
+            else
+                Console.WriteLine("Informação digitada inválida, digite novamente\n");
+        }
+
+        if (formaDePagamentoDigitado.ToLower().Equals("dinheiro"))
+        {
+            tipoDePagamento = "À vista";
+            descontoAdicional = 0.05m;
+            valorDeDescontoComCupom = valorCompra * percentualDescontoComCupom;
+            valorDeDescontoAdicional = valorDeDescontoComCupom * descontoAdicional;
+            valorFinal = valorCompra - (valorDeDescontoAdicional + valorDeDescontoComCupom);
+        }
+        else if (formaDePagamentoDigitado.ToLower().Equals("pix"))
+        {
+            tipoDePagamento = "À vista";
+            descontoAdicional = 0.03m;
+            valorDeDescontoComCupom = valorCompra * percentualDescontoComCupom;
+            valorDeDescontoAdicional = valorDeDescontoComCupom * descontoAdicional;
+            valorFinal = valorCompra - (valorDeDescontoAdicional + valorDeDescontoComCupom);
+        }
+        else if (formaDePagamentoDigitado.ToLower().Equals("débito") || formaDePagamentoDigitado.ToLower().Equals("debito"))
+        {
+            tipoDePagamento = "À vista";
+            descontoAdicional = 0.00m;
+            valorDeDescontoComCupom = valorCompra * percentualDescontoComCupom;
+            valorDeDescontoAdicional = valorDeDescontoComCupom * descontoAdicional;
+            valorFinal = valorCompra - (valorDeDescontoAdicional + valorDeDescontoComCupom);
+        }
+        else
+        {
+            if (quantidadeDeParcelas == 0)
+            {
+                tipoDePagamento = "À vista";
+                valorDeDescontoComCupom = valorCompra * percentualDescontoComCupom;
+                taxaDeAcrescimo = 0.05m;
+                valorDeTaxaDeAcrescimo = valorDeDescontoComCupom * taxaDeAcrescimo;
+                valorFinal = (valorCompra - valorDeDescontoComCupom) + valorDeTaxaDeAcrescimo;
+            }
+            else
+            {
+                tipoDePagamento = "Parcelado";
+                valorDeDescontoComCupom = valorCompra * percentualDescontoComCupom;
+                taxaDeAcrescimo = 0.05m;
+                valorDeTaxaDeAcrescimo = valorDeDescontoComCupom * taxaDeAcrescimo;
+                valorFinal = (valorCompra - valorDeDescontoComCupom) + valorDeTaxaDeAcrescimo;
+                valorDeParcelas = valorFinal / quantidadeDeParcelas;
+            }
+        }
+
+        Console.WriteLine("\n === Compas Online === \n");
+
+        Console.WriteLine($"Cliente: {nomeCliente}\n");
+
+        Console.WriteLine("Cálculo: \n");
+
+        Console.WriteLine($"Valor original da compra: {valorCompra:C}");
+        Console.WriteLine($"O cliente tinha cupom de desconto? {(cupomParaDesconto ? "Sim" : "Não")}");
+        if (cupomParaDesconto)
+            Console.WriteLine($"Valor do Desconto ({percentualDescontoComCupom:p}): {valorDeDescontoComCupom:C}");
+        Console.WriteLine($"Forma de pagamento: {formaDePagamentoDigitado}");
+        if (formaDePagamentoDigitado.ToLower().Equals("débito") || formaDePagamentoDigitado.ToLower().Equals("debito"))
+            Console.WriteLine("Sem desconto Adicional");
+        else if (formaDePagamentoDigitado.ToLower().Equals("credito") || formaDePagamentoDigitado.ToLower().Equals("crédito"))
+            Console.WriteLine($"Valor de acréscimo ({taxaDeAcrescimo:p}): {valorDeTaxaDeAcrescimo:C}");
+        else
+            Console.WriteLine($"Valor de desconto adicional ({descontoAdicional:p}): {valorDeDescontoAdicional:C}");
+        Console.WriteLine($"\nValor Final: {valorFinal:C}");
+        Console.WriteLine($"Tipo de pagamento: {tipoDePagamento}");
+        if (quantidadeDeParcelas > 0)
+        {
+            Console.WriteLine($"Quantidade de parcelas: {quantidadeDeParcelas}");
+            Console.WriteLine($"Valor por parcela: {valorDeParcelas:C}");
+        }
+    }
     static void Prova2Questao1() { }
     static void Prova2Questao2() { }
     static void Prova2Questao3() { }
     static void Prova2Questao4() { }
     static void Prova2Questao5() { }
+
+    public enum EnumSituacaoAluno
+    {
+        APROVADO,
+        RECUPERAÇÃO,
+        REPROVADO,
+        REPROVADOPORFALTA
+    }
+
+    public enum EnumDesempenhoEstagiarios
+    {
+        EXCELENTE,
+        BOA,
+        REGULAR,
+        FRACA
+    }
+
+    public enum EnumFormasDePagamento
+    {
+        DINHEIRO,
+        PIX,
+        DEBITO,
+        CREDITO
+    }
 }
