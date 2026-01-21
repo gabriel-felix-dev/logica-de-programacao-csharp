@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace logica_de_programacao_csharp;
 
@@ -11,7 +12,7 @@ class Program
 
     static void Menu()
     {
-        Console.Clear();
+        // Console.Clear();
 
         while (true)
         {
@@ -225,7 +226,7 @@ class Program
 
         Console.WriteLine($"A turma é composta por quantos estágiarios?");
 
-        while (!int.TryParse(Console.ReadLine(), out quantidadeTurmaEstagiarios))
+        while (!int.TryParse(Console.ReadLine(), out quantidadeTurmaEstagiarios) || quantidadeTurmaEstagiarios < 0)
             Console.WriteLine("O valor informado é inválido, digite novamente\n");
 
         while (listaDeMedias.Count < quantidadeTurmaEstagiarios)
@@ -282,66 +283,128 @@ class Program
     }
     static void Prova1Questao4()
     {
-        List<string> listaDeProdutos = ["Mouse", "Teclado", "Monitor", "Cabo HDMI", "Cadeira"];
-        List<int> listaDeEstoques = [10, 6, 4, 18, 5];
+        Dictionary<string, int> dicionarioDeEstoques = new() { { "Mouse", 10 }, { "Teclado", 6 }, { "Cabo HDMI", 18 }, { "Cadeira", 5 } };
+
+
+        Dictionary<string, int> dicionarioDeEstoquesBaixo = [];
 
         int contadorDeEstoque = 0;
 
-        List<string> listaDeProdutosComEstoqueBaixo = [];
-
         Console.WriteLine("=== Estoque Inicial ===\n");
 
-        for (int percorreLista = 0; percorreLista < listaDeProdutos.Count; percorreLista++)
-            Console.WriteLine($"Produto: {listaDeProdutos[percorreLista]} - {listaDeEstoques[percorreLista]} unidades");
+        foreach (var itensNoDicionario in dicionarioDeEstoques)
+            Console.WriteLine($"Produto: {itensNoDicionario.Key} - {itensNoDicionario.Value} unidades");
 
         Console.WriteLine("\n=== Operações ===\n");
 
-        listaDeProdutos.Add("SSD");
-        listaDeEstoques.Add(7);
+        dicionarioDeEstoques.Add("SSD", 7);
 
-        listaDeEstoques[1] = 12;
+        string verificacaoDeProduto = "SSD";
 
-        Console.WriteLine($"Produto adicionado no estoque: {listaDeProdutos[5]} - {listaDeEstoques[5]} unidades");
+        if (dicionarioDeEstoques.TryGetValue(verificacaoDeProduto, out int quantidadeEmEstoque))
+            Console.WriteLine($"Novo produto adicionado ao estoque: {verificacaoDeProduto} - {quantidadeEmEstoque} unidades");
 
-        bool contemProduto = listaDeProdutos.Contains("Webcam");
+        dicionarioDeEstoques["Teclado"] = 12;
 
-        Console.WriteLine($"O produto \"Webcam\" existe no estoque? {(contemProduto ? "Sim" : "Não")}");
+        verificacaoDeProduto = "Teclado";
 
-        for (int percorreLista = 0; percorreLista < listaDeProdutos.Count; percorreLista++)
+        if (dicionarioDeEstoques.TryGetValue(verificacaoDeProduto, out int quantidadeEmEstoqueNovo))
+            Console.WriteLine($"Nova quantidade após recontagem de estoque: {verificacaoDeProduto} - {quantidadeEmEstoqueNovo} unidades");
+
+        verificacaoDeProduto = "Webcam";
+
+        bool procuraEmEstoque = dicionarioDeEstoques.ContainsKey(verificacaoDeProduto);
+
+        Console.WriteLine($"O produto \"{verificacaoDeProduto}\" existe no estoque? {(procuraEmEstoque ? "Sim" : "Não")}");
+
+        verificacaoDeProduto = "Monitor";
+
+        dicionarioDeEstoques.Remove(verificacaoDeProduto);
+
+        Console.WriteLine($"Produto removido: {verificacaoDeProduto}");
+
+        foreach (var itensNoDicionario in dicionarioDeEstoques)
         {
-            if (listaDeEstoques[percorreLista] < 8)
+            if (itensNoDicionario.Value < 8)
             {
                 contadorDeEstoque++;
-
-                listaDeProdutosComEstoqueBaixo.Add(listaDeProdutos[percorreLista]);
+                dicionarioDeEstoquesBaixo.Add(itensNoDicionario.Key, itensNoDicionario.Value);
             }
         }
 
-        Console.WriteLine($"Quantidade de produtos com estoque abaixo de 8: {contadorDeEstoque}");
+        int quantidadeTotalDeEstoque = dicionarioDeEstoques.Values.Sum();
 
-        Console.WriteLine($"Lista de produtos com estoque abaixo de 8: ");
-        foreach (var itensNaLista in listaDeProdutosComEstoqueBaixo)
-            Console.WriteLine(itensNaLista);
+        Console.WriteLine("\n===Estoque Final===\n");
 
-        listaDeProdutos.Remove("Monitor");
-        listaDeEstoques.Remove(4);
+        foreach (var itensNoDicionario in dicionarioDeEstoques)
+            Console.WriteLine($"Produto: {itensNoDicionario.Key} - {itensNoDicionario.Value} unidades");
 
-        Console.WriteLine($"Produto removido: Monitor");
-
-        int totalDeProdutosEmEstoque = listaDeEstoques.Sum();
-
-        Console.WriteLine($"\n=== Estoque Final ===\n");
-
-        for (int percorreLista = 0; percorreLista < listaDeProdutos.Count; percorreLista++)
-            Console.WriteLine($"Produto: {listaDeProdutos[percorreLista]} - {listaDeEstoques[percorreLista]} unidades");
-
-        Console.WriteLine($"\nTotal de produtos: {totalDeProdutosEmEstoque}");
+        Console.WriteLine($"\nTotal de quantidade de estoque: {quantidadeTotalDeEstoque}");
     }
+    // static void Prova1Questao4()
+    // {
+    //     List<string> listaDeProdutos = ["Mouse", "Teclado", "Monitor", "Cabo HDMI", "Cadeira"];
+    //     List<int> listaDeEstoques = [10, 6, 4, 18, 5];
+
+    //     int contadorDeEstoque = 0;
+
+    //     List<string> listaDeProdutosComEstoqueBaixo = [];
+
+    //     Console.WriteLine("=== Estoque Inicial ===\n");
+
+    //     for (int percorreLista = 0; percorreLista < listaDeProdutos.Count; percorreLista++)
+    //         Console.WriteLine($"Produto: {listaDeProdutos[percorreLista]} - {listaDeEstoques[percorreLista]} unidades");
+
+    //     Console.WriteLine("\n=== Operações ===\n");
+
+    //     listaDeProdutos.Add("SSD");
+    //     listaDeEstoques.Add(7);
+
+    //     listaDeEstoques[1] = 12;
+
+    //     Console.WriteLine($"Produto adicionado no estoque: {listaDeProdutos[5]} - {listaDeEstoques[5]} unidades");
+
+    //     bool contemProduto = listaDeProdutos.Contains("Webcam");
+
+    //     Console.WriteLine($"O produto \"Webcam\" existe no estoque? {(contemProduto ? "Sim" : "Não")}");
+
+    //     for (int percorreLista = 0; percorreLista < listaDeProdutos.Count; percorreLista++)
+    //     {
+    //         if (listaDeEstoques[percorreLista] < 8)
+    //         {
+    //             contadorDeEstoque++;
+
+    //             listaDeProdutosComEstoqueBaixo.Add(listaDeProdutos[percorreLista]);
+    //         }
+    //     }
+
+    //     Console.WriteLine($"Quantidade de produtos com estoque abaixo de 8: {contadorDeEstoque}");
+
+    //     Console.WriteLine($"Lista de produtos com estoque abaixo de 8: ");
+    //     foreach (var itensNaLista in listaDeProdutosComEstoqueBaixo)
+    //         Console.WriteLine(itensNaLista);
+
+    //     listaDeProdutos.Remove("Monitor");
+    //     listaDeEstoques.Remove(4);
+
+    //     Console.WriteLine($"Produto removido: Monitor");
+
+    //     int totalDeProdutosEmEstoque = listaDeEstoques.Sum();
+
+    //     Console.WriteLine($"\n=== Estoque Final ===\n");
+
+    //     for (int percorreLista = 0; percorreLista < listaDeProdutos.Count; percorreLista++)
+    //         Console.WriteLine($"Produto: {listaDeProdutos[percorreLista]} - {listaDeEstoques[percorreLista]} unidades");
+
+    //     Console.WriteLine($"\nTotal de produtos: {totalDeProdutosEmEstoque}");
+    // }
     static void Prova1Questao5()
     {
         Console.Clear();
 
-        string nomeCliente, formaDePagamentoDigitado, tipoDePagamento;
+        string nomeCliente, formaDePagamentoDigitado;
+        string tipoDePagamento = "À vista";
+        EnumFormasDePagamento formasDePagamento;
         decimal valorCompra;
         bool cupomParaDesconto = false;
         decimal percentualDescontoComCupom = 0.0m;
@@ -378,13 +441,32 @@ class Program
             formaDePagamentoDigitado = Console.ReadLine();
 
             if (string.IsNullOrWhiteSpace(formaDePagamentoDigitado))
+            {
                 Console.WriteLine("A forma de pagamento é inválida, digite novamnete\n");
-
-            else
-                break;
+                continue;
+            }
+            switch (formaDePagamentoDigitado.ToLower())
+            {
+                case "pix":
+                    formasDePagamento = EnumFormasDePagamento.PIX;
+                    break;
+                case "credito":
+                    formasDePagamento = EnumFormasDePagamento.CREDITO;
+                    break;
+                case "debito":
+                    formasDePagamento = EnumFormasDePagamento.DEBITO;
+                    break;
+                case "dinheiro":
+                    formasDePagamento = EnumFormasDePagamento.DINHEIRO;
+                    break;
+                default:
+                    Console.WriteLine("Forma de pagamento não cadastrada, digite novamente");
+                    continue;
+            }
+            break;
         }
 
-        if (formaDePagamentoDigitado.ToLower().Equals("credito") || formaDePagamentoDigitado.ToLower().Equals("crédito"))
+        if (formasDePagamento.Equals(EnumFormasDePagamento.CREDITO))
         {
             Console.WriteLine("\nDigite a quantidade de parcelas: ");
 
@@ -394,7 +476,7 @@ class Program
 
         while (true)
         {
-            Console.WriteLine("\nO cliente tem cupom? ");
+            Console.WriteLine("\nO cliente tem cupom? (sim/nao) ");
             string cupomDigitado = Console.ReadLine();
 
             if (cupomDigitado.ToLower().Equals("sim"))
@@ -403,55 +485,47 @@ class Program
                 cupomParaDesconto = true;
                 break;
             }
-            else if (cupomDigitado.ToLower().Equals("não") || cupomDigitado.ToLower().Equals("nao"))
+            else if (cupomDigitado.ToLower().Equals("nao"))
                 break;
+
             else
                 Console.WriteLine("Informação digitada inválida, digite novamente\n");
         }
 
-        if (formaDePagamentoDigitado.ToLower().Equals("dinheiro"))
-        {
-            tipoDePagamento = "À vista";
-            descontoAdicional = 0.05m;
+        if (cupomParaDesconto)
             valorDeDescontoComCupom = valorCompra * percentualDescontoComCupom;
-            valorDeDescontoAdicional = valorDeDescontoComCupom * descontoAdicional;
-            valorFinal = valorCompra - (valorDeDescontoAdicional + valorDeDescontoComCupom);
-        }
-        else if (formaDePagamentoDigitado.ToLower().Equals("pix"))
+
+        switch (formasDePagamento)
         {
-            tipoDePagamento = "À vista";
-            descontoAdicional = 0.03m;
-            valorDeDescontoComCupom = valorCompra * percentualDescontoComCupom;
-            valorDeDescontoAdicional = valorDeDescontoComCupom * descontoAdicional;
-            valorFinal = valorCompra - (valorDeDescontoAdicional + valorDeDescontoComCupom);
-        }
-        else if (formaDePagamentoDigitado.ToLower().Equals("débito") || formaDePagamentoDigitado.ToLower().Equals("debito"))
-        {
-            tipoDePagamento = "À vista";
-            descontoAdicional = 0.00m;
-            valorDeDescontoComCupom = valorCompra * percentualDescontoComCupom;
-            valorDeDescontoAdicional = valorDeDescontoComCupom * descontoAdicional;
-            valorFinal = valorCompra - (valorDeDescontoAdicional + valorDeDescontoComCupom);
-        }
-        else
-        {
-            if (quantidadeDeParcelas == 0)
-            {
-                tipoDePagamento = "À vista";
-                valorDeDescontoComCupom = valorCompra * percentualDescontoComCupom;
+            case EnumFormasDePagamento.PIX:
+                descontoAdicional = 0.03m;
+                valorDeDescontoAdicional = valorDeDescontoComCupom * descontoAdicional;
+                valorFinal = valorCompra - valorDeDescontoAdicional - valorDeDescontoComCupom;
+                break;
+
+            case EnumFormasDePagamento.DEBITO:
+                descontoAdicional = 0.00m;
+                valorDeDescontoAdicional = valorDeDescontoComCupom * descontoAdicional;
+                valorFinal = valorCompra - valorDeDescontoAdicional - valorDeDescontoComCupom;
+                break;
+
+            case EnumFormasDePagamento.DINHEIRO:
+                descontoAdicional = 0.05m;
+                valorDeDescontoAdicional = valorDeDescontoComCupom * descontoAdicional;
+                valorFinal = valorCompra - valorDeDescontoAdicional - valorDeDescontoComCupom;
+                break;
+
+            default:
                 taxaDeAcrescimo = 0.05m;
                 valorDeTaxaDeAcrescimo = valorDeDescontoComCupom * taxaDeAcrescimo;
-                valorFinal = (valorCompra - valorDeDescontoComCupom) + valorDeTaxaDeAcrescimo;
-            }
-            else
-            {
-                tipoDePagamento = "Parcelado";
-                valorDeDescontoComCupom = valorCompra * percentualDescontoComCupom;
-                taxaDeAcrescimo = 0.05m;
-                valorDeTaxaDeAcrescimo = valorDeDescontoComCupom * taxaDeAcrescimo;
-                valorFinal = (valorCompra - valorDeDescontoComCupom) + valorDeTaxaDeAcrescimo;
-                valorDeParcelas = valorFinal / quantidadeDeParcelas;
-            }
+                valorFinal = valorCompra - valorDeDescontoComCupom + valorDeTaxaDeAcrescimo;
+
+                if (quantidadeDeParcelas > 0)
+                {
+                    tipoDePagamento = "Parcelado";
+                    valorDeParcelas = valorFinal / quantidadeDeParcelas;
+                }
+                break;
         }
 
         Console.WriteLine("\n === Compas Online === \n");
@@ -464,13 +538,17 @@ class Program
         Console.WriteLine($"O cliente tinha cupom de desconto? {(cupomParaDesconto ? "Sim" : "Não")}");
         if (cupomParaDesconto)
             Console.WriteLine($"Valor do Desconto ({percentualDescontoComCupom:p}): {valorDeDescontoComCupom:C}");
-        Console.WriteLine($"Forma de pagamento: {formaDePagamentoDigitado}");
-        if (formaDePagamentoDigitado.ToLower().Equals("débito") || formaDePagamentoDigitado.ToLower().Equals("debito"))
+
+        Console.WriteLine($"Forma de pagamento: {formasDePagamento}");
+        if (formasDePagamento.Equals(EnumFormasDePagamento.DEBITO))
             Console.WriteLine("Sem desconto Adicional");
-        else if (formaDePagamentoDigitado.ToLower().Equals("credito") || formaDePagamentoDigitado.ToLower().Equals("crédito"))
+
+        else if (formasDePagamento.Equals(EnumFormasDePagamento.CREDITO))
             Console.WriteLine($"Valor de acréscimo ({taxaDeAcrescimo:p}): {valorDeTaxaDeAcrescimo:C}");
+
         else
             Console.WriteLine($"Valor de desconto adicional ({descontoAdicional:p}): {valorDeDescontoAdicional:C}");
+
         Console.WriteLine($"\nValor Final: {valorFinal:C}");
         Console.WriteLine($"Tipo de pagamento: {tipoDePagamento}");
         if (quantidadeDeParcelas > 0)
@@ -479,7 +557,64 @@ class Program
             Console.WriteLine($"Valor por parcela: {valorDeParcelas:C}");
         }
     }
-    static void Prova2Questao1() { }
+
+    static void Prova2Questao1()
+    {
+        var nomeCliente = EnumBandeirasDeConsumo.AMARELA;
+        decimal consumoDeEnergia = 350.0m;
+        decimal valorKwh = 0.72m;
+
+        var descricao = nomeCliente.GetType().GetEnumValues();
+
+
+        decimal percentualAcrescimoBandeira;
+        decimal valorDeDescontoPorBandeira;
+        decimal percentualDeDescontoBonus = 0.0m;
+        decimal valorDeDescontoExtra = 0.0m;
+        decimal valorFinal = 0.0m;
+
+        string inputDigitado = Console.ReadLine();
+        // EnumBandeirasDeConsumo[] valores = ;
+
+
+
+        decimal valorDaConta = consumoDeEnergia * valorKwh;
+
+        if (consumoDeEnergia < 200)
+            percentualDeDescontoBonus = 0.08m;
+
+        if (percentualDeDescontoBonus > 0.00m)
+            valorDeDescontoExtra = valorDaConta * percentualDeDescontoBonus;
+
+        // switch (bandeirasDeConsumo)
+        // {
+        //     case EnumBandeirasDeConsumo.VERDE:
+        //         percentualAcrescimoBandeira = 0.0m;
+        //         valorDeDescontoPorBandeira = valorDeDescontoExtra * percentualAcrescimoBandeira;
+        //         valorFinal = valorDaConta - valorDeDescontoExtra - valorDeDescontoPorBandeira;
+        //         break;
+
+        //     case EnumBandeirasDeConsumo.AMARELA:
+        //         percentualAcrescimoBandeira = 0.05m;
+        //         valorDeDescontoPorBandeira = valorDeDescontoExtra * percentualAcrescimoBandeira;
+        //         valorFinal = valorDaConta - valorDeDescontoExtra - valorDeDescontoPorBandeira;
+        //         break;
+
+        //     default:
+        //         percentualAcrescimoBandeira = 0.1m;
+        //         valorDeDescontoPorBandeira = valorDeDescontoExtra * percentualAcrescimoBandeira;
+        //         valorFinal = valorDaConta - valorDeDescontoExtra - valorDeDescontoPorBandeira;
+        //         break;
+        // }
+
+        Console.WriteLine("\n=== Fatura Detalhada ===\n");
+
+        Console.WriteLine($"Cliente: {nomeCliente}\n");
+        Console.WriteLine($"Subtotal: \n");
+        // Console.WriteLine($"Bandiera: {bandeirasDeConsumo}");
+
+
+    }
     static void Prova2Questao2() { }
     static void Prova2Questao3() { }
     static void Prova2Questao4() { }
@@ -507,5 +642,13 @@ class Program
         PIX,
         DEBITO,
         CREDITO
+    }
+
+    public enum EnumBandeirasDeConsumo
+    {
+        VERDE = 1,
+        [Description("Amarela")]
+        AMARELA = 2,
+        VERMELHA = 3,
     }
 }
