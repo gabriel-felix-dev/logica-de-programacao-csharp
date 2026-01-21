@@ -1,7 +1,4 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-
-namespace logica_de_programacao_csharp;
+﻿namespace logica_de_programacao_csharp;
 
 class Program
 {
@@ -12,7 +9,7 @@ class Program
 
     static void Menu()
     {
-        // Console.Clear();
+        Console.Clear();
 
         while (true)
         {
@@ -560,58 +557,107 @@ class Program
 
     static void Prova2Questao1()
     {
-        var nomeCliente = EnumBandeirasDeConsumo.AMARELA;
-        decimal consumoDeEnergia = 350.0m;
+        Console.Clear();
+
+        var nomeCliente = "Carlos Menezes";
+        string bandeiraAtual = "Amarela";
+        //string bandeiraAtual;
+        decimal consumoDeEnergia = 150.00m;
         decimal valorKwh = 0.72m;
-
-        var descricao = nomeCliente.GetType().GetEnumValues();
-
-
+        EnumBandeirasDeConsumo bandeirasDeConsumo;
         decimal percentualAcrescimoBandeira;
-        decimal valorDeDescontoPorBandeira;
+        decimal valorDeAcrescimoPorBandeira;
         decimal percentualDeDescontoBonus = 0.0m;
         decimal valorDeDescontoExtra = 0.0m;
+        decimal valorDaContaComDescontoExtra = 0.0m;
         decimal valorFinal = 0.0m;
-
-        string inputDigitado = Console.ReadLine();
-        // EnumBandeirasDeConsumo[] valores = ;
-
-
 
         decimal valorDaConta = consumoDeEnergia * valorKwh;
 
-        if (consumoDeEnergia < 200)
-            percentualDeDescontoBonus = 0.08m;
-
-        if (percentualDeDescontoBonus > 0.00m)
-            valorDeDescontoExtra = valorDaConta * percentualDeDescontoBonus;
-
-        // switch (bandeirasDeConsumo)
+        // while (true)
         // {
-        //     case EnumBandeirasDeConsumo.VERDE:
-        //         percentualAcrescimoBandeira = 0.0m;
-        //         valorDeDescontoPorBandeira = valorDeDescontoExtra * percentualAcrescimoBandeira;
-        //         valorFinal = valorDaConta - valorDeDescontoExtra - valorDeDescontoPorBandeira;
-        //         break;
+        //     Console.WriteLine("\nDigite a bandeira atual: ");
+        //     bandeiraAtual = Console.ReadLine();
 
-        //     case EnumBandeirasDeConsumo.AMARELA:
-        //         percentualAcrescimoBandeira = 0.05m;
-        //         valorDeDescontoPorBandeira = valorDeDescontoExtra * percentualAcrescimoBandeira;
-        //         valorFinal = valorDaConta - valorDeDescontoExtra - valorDeDescontoPorBandeira;
-        //         break;
-
-        //     default:
-        //         percentualAcrescimoBandeira = 0.1m;
-        //         valorDeDescontoPorBandeira = valorDeDescontoExtra * percentualAcrescimoBandeira;
-        //         valorFinal = valorDaConta - valorDeDescontoExtra - valorDeDescontoPorBandeira;
-        //         break;
+        //     if (string.IsNullOrWhiteSpace(bandeiraAtual))
+        //     {
+        //         Console.WriteLine("A bandeira informada é inválida, digite novamnete\n");
+        //         continue;
+        //     }
+        //     switch (bandeiraAtual.ToLower())
+        //     {
+        //         case "verde":
+        //             bandeirasDeConsumo = EnumBandeirasDeConsumo.VERDE;
+        //             break;
+        //         case "amarela":
+        //             bandeirasDeConsumo = EnumBandeirasDeConsumo.AMARELA;
+        //             break;
+        //         case "vermelha":
+        //             bandeirasDeConsumo = EnumBandeirasDeConsumo.VERMELHA;
+        //             break;
+        //         default:
+        //             Console.WriteLine("Bandeira inválida");
+        //             continue;
+        //     }
+        //     break;
         // }
+
+        switch (bandeiraAtual.ToLower())
+        {
+            case "verde":
+                bandeirasDeConsumo = EnumBandeirasDeConsumo.VERDE;
+                break;
+            case "amarela":
+                bandeirasDeConsumo = EnumBandeirasDeConsumo.AMARELA;
+                break;
+            case "vermelha":
+                bandeirasDeConsumo = EnumBandeirasDeConsumo.VERMELHA;
+                break;
+            default:
+                Console.WriteLine("Bandeira inválida");
+                return;
+        }
+
+        if (consumoDeEnergia < 200)
+        {
+            percentualDeDescontoBonus = 0.08m;
+            valorDeDescontoExtra = valorDaConta * percentualDeDescontoBonus;
+            valorDaContaComDescontoExtra = valorDaConta - valorDeDescontoExtra;
+        }
+
+        switch (bandeirasDeConsumo)
+        {
+            case EnumBandeirasDeConsumo.VERDE:
+                percentualAcrescimoBandeira = 0.0m;
+                valorDeAcrescimoPorBandeira = valorDaContaComDescontoExtra * percentualAcrescimoBandeira;
+                valorFinal = valorDaConta - valorDaContaComDescontoExtra + valorDeAcrescimoPorBandeira;
+                break;
+
+            case EnumBandeirasDeConsumo.AMARELA:
+                percentualAcrescimoBandeira = 0.05m;
+                valorDeAcrescimoPorBandeira = valorDaContaComDescontoExtra * percentualAcrescimoBandeira;
+                valorFinal = valorDaConta - valorDaContaComDescontoExtra + valorDeAcrescimoPorBandeira;
+                break;
+
+            default:
+                percentualAcrescimoBandeira = 0.1m;
+                valorDeAcrescimoPorBandeira = valorDaContaComDescontoExtra * percentualAcrescimoBandeira;
+                valorFinal = valorDaConta - valorDaContaComDescontoExtra + valorDeAcrescimoPorBandeira;
+                break;
+        }
 
         Console.WriteLine("\n=== Fatura Detalhada ===\n");
 
         Console.WriteLine($"Cliente: {nomeCliente}\n");
+        Console.WriteLine($"Consumo de kWh: {consumoDeEnergia}");
         Console.WriteLine($"Subtotal: \n");
-        // Console.WriteLine($"Bandiera: {bandeirasDeConsumo}");
+        Console.WriteLine($"Valor de kWh na região: {valorKwh:c}");
+        Console.WriteLine($"Valor da conta: {valorDaConta:c}");
+        Console.WriteLine($"Bandiera ({bandeirasDeConsumo}): {valorDeAcrescimoPorBandeira:c}");
+        Console.WriteLine($"Desconto: {valorDeDescontoExtra:c}\n");
+        Console.WriteLine($"Total para pagamento: {valorFinal:c}");
+
+
 
 
     }
@@ -646,9 +692,8 @@ class Program
 
     public enum EnumBandeirasDeConsumo
     {
-        VERDE = 1,
-        [Description("Amarela")]
-        AMARELA = 2,
-        VERMELHA = 3,
+        VERDE,
+        AMARELA,
+        VERMELHA,
     }
 }
