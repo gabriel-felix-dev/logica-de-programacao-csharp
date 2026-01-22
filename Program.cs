@@ -722,8 +722,117 @@ class Program
         Console.WriteLine($"Valor médio das vendas: {valorMedioDosPedidos:c}");
         Console.WriteLine($"\nClassificação do dia: {desempenhoDoDia}");
     }
-    static void Prova2Questao4() { }
-    static void Prova2Questao5() { }
+    static void Prova2Questao4()
+    {
+        Console.Clear();
+
+        List<string> listaDeAtividades = ["Estudar lógica", "Fazer exercícios", "Revisar conteúdos", "Enviar atividade"];
+
+        Console.WriteLine("Antiga rotina: ");
+        for (int percorreLista = 0; percorreLista < listaDeAtividades.Count; percorreLista++)
+            Console.WriteLine($"{percorreLista + 1}. {listaDeAtividades[percorreLista]}");
+
+        Console.WriteLine("\nAlterações na rotina: \n");
+
+        listaDeAtividades.Add("Ler Apostila");
+
+        Console.WriteLine($"Adicionado à rotina como última atividade: {listaDeAtividades[4]}");
+
+        listaDeAtividades.InsertRange(1, "Assistir aula");
+
+        Console.WriteLine($"Atividade encaixada como 2° item da rotina: {listaDeAtividades[1]}");
+
+        string verificacaoDeAtividade = listaDeAtividades.Contains("Almoçar") ? "Sim, a tarefa já existe." : $"A tarefa não existia na lista. Ela foi adicionada.";
+
+        listaDeAtividades.Add("Almoçar");
+
+        Console.WriteLine($"A tarefa almoçar existe na lista? {verificacaoDeAtividade}");
+
+        Console.WriteLine($"Tarefa \"{listaDeAtividades[3]}\" concluída. Ela será removida da lista de tarefas.");
+
+        listaDeAtividades.Remove("Revisar conteúdo");
+
+        Console.WriteLine("\nNova Rotina:");
+        for (int percorreLista = 0; percorreLista < listaDeAtividades.Count; percorreLista++)
+            Console.WriteLine($"{percorreLista + 1}. {listaDeAtividades[percorreLista]}");
+    }
+    static void Prova2Questao5()
+    {
+        Console.Clear();
+
+        string nomeFuncionario;
+        decimal salarioBruto;
+        decimal horasExtras;
+        decimal valorHorasExtras;
+        string validacaoValeTransporte;
+        bool recebeValeTransporte = false;
+        decimal percentualDeValeTransporte = 0.0m;
+        decimal percentualInss = 0.08m;
+
+        Console.WriteLine($"Qual o nome do funcionário?");
+        while (true)
+        {
+            nomeFuncionario = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(nomeFuncionario))
+                Console.WriteLine("\nO nome informado é válido, digite novamente: ");
+
+            else
+                break;
+        }
+
+        Console.WriteLine($"\nQual o salário bruto do funcionário {nomeFuncionario}? ");
+        while (!decimal.TryParse(Console.ReadLine(), out salarioBruto) || salarioBruto < 0)
+            Console.WriteLine("\nO salário informado é inválido, digite novamente: ");
+
+        Console.WriteLine($"\nQuantas horas extras o funcionário {nomeFuncionario} tem? ");
+        while (!decimal.TryParse(Console.ReadLine(), out horasExtras) || horasExtras < 0)
+            Console.WriteLine($"\nA quantidade de horas extras é inválida, digite novamente: ");
+
+        Console.WriteLine($"\nDigite o valor da hora extra: ");
+        while (!decimal.TryParse(Console.ReadLine(), out valorHorasExtras) || valorHorasExtras < 0)
+            Console.WriteLine($"\nValor de horas extras é inválida, digite novamente: ");
+
+        Console.WriteLine($"\nO funcionário {nomeFuncionario} recebe vale-transporte? (Sim / Nao)");
+
+        while (true)
+        {
+            validacaoValeTransporte = Console.ReadLine();
+
+            switch (validacaoValeTransporte.ToLower())
+            {
+                case "sim":
+                    recebeValeTransporte = true;
+                    percentualDeValeTransporte = 0.06m;
+                    break;
+                case "nao":
+                    break;
+                default:
+                    Console.WriteLine("\nResposta inválida, digite novamente: ");
+                    continue;
+            }
+            break;
+        }
+
+        decimal valorTotalDeHorasExtras = horasExtras * valorHorasExtras;
+        decimal salarioTotal = salarioBruto + valorTotalDeHorasExtras;
+        decimal descontoInss = salarioTotal * percentualInss;
+        decimal salarioFinal = salarioTotal - descontoInss;
+        decimal descontoValeTransporte = recebeValeTransporte.Equals(true) ? salarioFinal * percentualDeValeTransporte : 0;
+        salarioFinal -= descontoValeTransporte;
+
+        Console.WriteLine("\n=== Folha de Pagamento ===\n");
+        Console.WriteLine($"Nome do funcionário: {nomeFuncionario}");
+        Console.WriteLine($"\nSalário bruto: {salarioBruto:c}");
+        Console.WriteLine($"Horas Extras trabalhadas: {horasExtras:F2}");
+        Console.WriteLine($"Valor da Hora Extra: {valorHorasExtras:c}");
+        Console.WriteLine($"Valor para recerber pelas Horas extras: {valorTotalDeHorasExtras:c}");
+        Console.WriteLine($"Valor de desconto do INSS ({percentualInss:p}): {descontoInss}");
+        if (recebeValeTransporte)
+            Console.WriteLine($"Valor de Vale-Transporte ({percentualDeValeTransporte:p}): {descontoValeTransporte:C}");
+
+        Console.WriteLine($"\n==================================================================\n");
+        Console.WriteLine($"Salário líquido: {salarioFinal:C}");
+    }
 
     public enum EnumSituacaoAluno
     {
