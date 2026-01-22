@@ -1,4 +1,6 @@
-﻿namespace logica_de_programacao_csharp;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace logica_de_programacao_csharp;
 
 class Program
 {
@@ -559,48 +561,13 @@ class Program
     {
         Console.Clear();
 
-        var nomeCliente = "Carlos Menezes";
-        string bandeiraAtual = "Amarela";
-        //string bandeiraAtual;
+        string nomeCliente = "Carlos Menezes";
+        string bandeiraAtual = "Vermelha";
         decimal consumoDeEnergia = 150.00m;
         decimal valorKwh = 0.72m;
         EnumBandeirasDeConsumo bandeirasDeConsumo;
-        decimal percentualAcrescimoBandeira;
-        decimal valorDeAcrescimoPorBandeira;
-        decimal percentualDeDescontoBonus = 0.0m;
-        decimal valorDeDescontoExtra = 0.0m;
-        decimal valorDaContaComDescontoExtra = 0.0m;
-        decimal valorFinal = 0.0m;
 
-        decimal valorDaConta = consumoDeEnergia * valorKwh;
-
-        // while (true)
-        // {
-        //     Console.WriteLine("\nDigite a bandeira atual: ");
-        //     bandeiraAtual = Console.ReadLine();
-
-        //     if (string.IsNullOrWhiteSpace(bandeiraAtual))
-        //     {
-        //         Console.WriteLine("A bandeira informada é inválida, digite novamnete\n");
-        //         continue;
-        //     }
-        //     switch (bandeiraAtual.ToLower())
-        //     {
-        //         case "verde":
-        //             bandeirasDeConsumo = EnumBandeirasDeConsumo.VERDE;
-        //             break;
-        //         case "amarela":
-        //             bandeirasDeConsumo = EnumBandeirasDeConsumo.AMARELA;
-        //             break;
-        //         case "vermelha":
-        //             bandeirasDeConsumo = EnumBandeirasDeConsumo.VERMELHA;
-        //             break;
-        //         default:
-        //             Console.WriteLine("Bandeira inválida");
-        //             continue;
-        //     }
-        //     break;
-        // }
+        decimal valorConta = consumoDeEnergia * valorKwh;
 
         switch (bandeiraAtual.ToLower())
         {
@@ -614,55 +581,147 @@ class Program
                 bandeirasDeConsumo = EnumBandeirasDeConsumo.VERMELHA;
                 break;
             default:
-                Console.WriteLine("Bandeira inválida");
+                Console.WriteLine("Valor inválido");
                 return;
         }
 
-        if (consumoDeEnergia < 200)
+        decimal percentualDeAcrescimo = bandeirasDeConsumo switch
         {
-            percentualDeDescontoBonus = 0.08m;
-            valorDeDescontoExtra = valorDaConta * percentualDeDescontoBonus;
-            valorDaContaComDescontoExtra = valorDaConta - valorDeDescontoExtra;
-        }
+            EnumBandeirasDeConsumo.VERDE => 0.0m,
+            EnumBandeirasDeConsumo.AMARELA => 0.05m,
+            _ => 0.1m
+        };
 
-        switch (bandeirasDeConsumo)
-        {
-            case EnumBandeirasDeConsumo.VERDE:
-                percentualAcrescimoBandeira = 0.0m;
-                valorDeAcrescimoPorBandeira = valorDaContaComDescontoExtra * percentualAcrescimoBandeira;
-                valorFinal = valorDaConta - valorDaContaComDescontoExtra + valorDeAcrescimoPorBandeira;
-                break;
-
-            case EnumBandeirasDeConsumo.AMARELA:
-                percentualAcrescimoBandeira = 0.05m;
-                valorDeAcrescimoPorBandeira = valorDaContaComDescontoExtra * percentualAcrescimoBandeira;
-                valorFinal = valorDaConta - valorDaContaComDescontoExtra + valorDeAcrescimoPorBandeira;
-                break;
-
-            default:
-                percentualAcrescimoBandeira = 0.1m;
-                valorDeAcrescimoPorBandeira = valorDaContaComDescontoExtra * percentualAcrescimoBandeira;
-                valorFinal = valorDaConta - valorDaContaComDescontoExtra + valorDeAcrescimoPorBandeira;
-                break;
-        }
+        decimal valorDeTaxaDeAcrescimo = valorConta * percentualDeAcrescimo;
+        decimal percentualDescontoComCupom = consumoDeEnergia < 200 ? 0.08m : 0.0m;
+        decimal valorDeDesconto = valorConta * percentualDescontoComCupom;
+        decimal valorFinal = valorConta + valorDeTaxaDeAcrescimo - valorDeDesconto;
 
         Console.WriteLine("\n=== Fatura Detalhada ===\n");
-
         Console.WriteLine($"Cliente: {nomeCliente}\n");
         Console.WriteLine($"Consumo de kWh: {consumoDeEnergia}");
         Console.WriteLine($"Subtotal: \n");
         Console.WriteLine($"Valor de kWh na região: {valorKwh:c}");
-        Console.WriteLine($"Valor da conta: {valorDaConta:c}");
-        Console.WriteLine($"Bandiera ({bandeirasDeConsumo}): {valorDeAcrescimoPorBandeira:c}");
-        Console.WriteLine($"Desconto: {valorDeDescontoExtra:c}\n");
+        Console.WriteLine($"Valor da conta: {valorConta:c}");
+        Console.WriteLine($"Desconto por consumo abaixo de 200 kWh: {valorDeDesconto:c}");
+        Console.WriteLine($"Bandeira ({bandeirasDeConsumo}): {valorDeTaxaDeAcrescimo:c}\n");
         Console.WriteLine($"Total para pagamento: {valorFinal:c}");
+    }
+    static void Prova2Questao2()
+    {
+        Console.Clear();
 
+        string nomeCliente;
+        decimal valorRendaMensal;
+        int scoreDeCredito;
+        DateTime dataAtual = DateTime.Today;
+        DateTime dataDeInicioNoEmprego;
+        bool creditoAprovado = false;
+        decimal valorDeCreditoAprovado = 0.0m;
 
+        Console.WriteLine("Digite o nome do cliente: ");
 
+        while (true)
+        {
+            nomeCliente = Console.ReadLine();
+            if (string.IsNullOrEmpty(nomeCliente))
+                Console.WriteLine("\nO nome informado é inválido, digite novamente: ");
+
+            else
+                break;
+        }
+
+        Console.WriteLine("\nDigite a sua renda mensal:");
+
+        while (!decimal.TryParse(Console.ReadLine(), out valorRendaMensal) || valorRendaMensal < 0)
+            Console.WriteLine($"\nO valor informado é inválido, digite novamente: ");
+
+        Console.WriteLine("\nDigite o seu score de crédito:");
+
+        while (!int.TryParse(Console.ReadLine(), out scoreDeCredito) || scoreDeCredito < 0)
+            Console.WriteLine($"\nO valor informado é inválido, digite novamente: ");
+
+        Console.WriteLine("\nDigite a data que você começou no seu emprego atual. Use como padrão ano/mes/dia (1999/12/31):");
+
+        while (!DateTime.TryParse(Console.ReadLine(), out dataDeInicioNoEmprego) || dataDeInicioNoEmprego > dataAtual)
+            Console.WriteLine("\nData informada inválida, digite novamente: ");
+
+        TimeSpan tempoTrabalhado = dataAtual - dataDeInicioNoEmprego;
+
+        int totalDeMeses = tempoTrabalhado.Days / 30;
+
+        if (valorRendaMensal >= 4000.00m || (valorRendaMensal >= 2800.00m && totalDeMeses >= 6))
+        {
+            creditoAprovado = true;
+            valorDeCreditoAprovado = valorRendaMensal * 0.4m;
+        }
+        else
+        {
+            if (valorRendaMensal >= 2000.00m && scoreDeCredito >= 650 && totalDeMeses >= 10)
+            {
+                creditoAprovado = true;
+                valorDeCreditoAprovado = valorRendaMensal * 0.25m;
+            }
+        }
+
+        Console.WriteLine("\n===Análise de Crédito===\n");
+
+        Console.WriteLine($"Nome do cliente: {nomeCliente}\n");
+        Console.WriteLine($"Renda mensal: {valorRendaMensal:c}");
+        Console.WriteLine($"Scorde: {scoreDeCredito}");
+        Console.WriteLine($"Tempo em meses de trabalho: {totalDeMeses} meses");
+        Console.WriteLine($"\nO crédito para empréstimo foi aprovado? {(creditoAprovado ? "Sim" : "Não")}");
+        if (creditoAprovado)
+            Console.WriteLine($"Valor de crédito aprovado: {valorDeCreditoAprovado:c}");
 
     }
-    static void Prova2Questao2() { }
-    static void Prova2Questao3() { }
+    static void Prova2Questao3()
+    {
+        Console.Clear();
+
+        List<decimal> listaDePedidos = [18.00m, 45.00m, 9.50m, 60.00m, 12.00m, 30.00m];
+        decimal totalDeVendas = listaDePedidos.Sum();
+        decimal valorMedioDosPedidos = totalDeVendas / listaDePedidos.Count;
+        int contadorPremium = 0;
+        decimal maisCara = 0;
+        decimal maisBarata = decimal.MaxValue;
+        string desempenhoDoDia;
+
+        Console.WriteLine("Vendas do dia: \n");
+        for (int percorrerLista = 0; percorrerLista < listaDePedidos.Count; percorrerLista++)
+        {
+            Console.WriteLine($"Pedido {percorrerLista + 1}: {listaDePedidos[percorrerLista]:c}");
+
+            if (listaDePedidos[percorrerLista] > 30.00m)
+                contadorPremium++;
+
+            if (listaDePedidos[percorrerLista] > maisCara)
+                maisCara = listaDePedidos[percorrerLista];
+
+            if (listaDePedidos[percorrerLista] < maisBarata)
+                maisBarata = listaDePedidos[percorrerLista];
+        }
+
+        if (totalDeVendas < 60.00m)
+            desempenhoDoDia = "Fraco";
+
+        else if (totalDeVendas < 120.00m)
+            desempenhoDoDia = "Regular";
+
+        else if (totalDeVendas < 200.00m)
+            desempenhoDoDia = "Bom";
+
+        else
+            desempenhoDoDia = "Ótimo";
+
+        Console.WriteLine("\n=== Relatório do Dia ===\n");
+        Console.WriteLine($"Faturamento total: {totalDeVendas:c}");
+        Console.WriteLine($"Total de pedidos Premium: {contadorPremium}");
+        Console.WriteLine($"Maior venda: {maisCara:c}");
+        Console.WriteLine($"Menor venda: {maisBarata:c}");
+        Console.WriteLine($"Valor médio das vendas: {valorMedioDosPedidos:c}");
+        Console.WriteLine($"\nClassificação do dia: {desempenhoDoDia}");
+    }
     static void Prova2Questao4() { }
     static void Prova2Questao5() { }
 
